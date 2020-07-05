@@ -40,23 +40,21 @@ yargs
                 })
         },
         handler: argv => {
-            f1tvUtils.f1tvAuthenticate(argv.username, argv.password)
-            .then(auth => {
-                f1tvUtils.f1tvGetSessionId(argv.sessionslug, auth)
-                .then(sessionId => {
-                    f1tvUtils.f1tvGetSessionChannelUrl(sessionId)
-                    .then(sessionChannelUrl => {
-                        f1tvUtils.f1tvGetTokenizedUrl(sessionChannelUrl, auth)
-                        .then(tokenizedUrl => {
-                            console.log(tokenizedUrl);
-                        })
-                        .catch(err => console.log("Failed to generate tokenized URL!"));
-                    })
-                    .catch(err => console.log("Failed to get session channel URL!"));
-                })
-                .catch(err => console.log("Failed to get session ID from session slug!"));
-            })
-            .catch(err => console.log("Failed to get session ID from session slug!"));
+            f1tvUtils.f1tvGetAuthStreamLinkFromSlug(argv.sessionslug, argv.username, argv.password)
+            .then(tokenizedUrl => console.log(tokenizedUrl))
+            .catch(err => console.log(err));
+        }
+    })
+    .command({
+        command: "get-upcoming-events",
+        describe: "Get the upcoming events",
+        builder: yargs => {
+
+        },
+        handler: argv => {
+            f1tvUtils.f1tvGetDetailedUpcomingEvents()
+            .then(upcomingDetailedEvents => console.log(upcomingDetailedEvents))
+            .catch(err => console.log(err));
         }
     })
     .help()

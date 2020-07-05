@@ -163,7 +163,34 @@ const f1tvGetTokenizedUrl = (channelId, authorization) => {
         .then(viewings => viewings.tokenised_url);
 };
 
-module.exports.f1tvGetSessionId = f1tvGetSessionId;
-module.exports.f1tvAuthenticate = f1tvAuthenticate;
-module.exports.f1tvGetSessionChannelUrl = f1tvGetSessionChannelUrl;
-module.exports.f1tvGetTokenizedUrl = f1tvGetTokenizedUrl;
+const f1tvGetUpcomingEvents = () => {
+    return fetch("https://f1tv-api.formula1.com/agl/1.0/can/en/all_devices/global/event-occurrence/current-season/upcoming")
+    .then(resp => resp.json())
+    .then(upcoming => upcoming.objects);
+};
+
+const f1tvGetAuthStreamLinkFromSlug = (sessionSlug, username, password) => {
+    return f1tvAuthenticate(username, password)
+    .then(auth => {
+        return f1tvGetSessionId(sessionSlug, auth)
+        .then(sessionId => {
+            return f1tvGetSessionChannelUrl(sessionId)
+            .then(sessionChannelUrl => {
+                return f1tvGetTokenizedUrl(sessionChannelUrl, auth);
+            });
+        });
+    });
+};
+
+const f1tvGetEventDetails = eventId => {
+    return fetch(`https://f1tv-api.formula1.com/agl/1.0/can/en/all_devices/global/event-occurrence/${eventId}/`)
+    .then(resp => resp.json());
+};
+
+const f1tvGetDetailedUpcomingEvents = () => {
+    return f1tvGetUpcomingEvents()
+    .then(upcomingEvents => Promise.all(upcomingEvents.map(event => f1tvGetEventDetails(event.uid))))
+};
+
+module.exports.f1tvGetAuthStreamLinkFromSlug = f1tvGetAuthStreamLinkFromSlug;
+module.exports.f1tvGetDetailedUpcomingEvents = f1tvGetDetailedUpcomingEvents;
