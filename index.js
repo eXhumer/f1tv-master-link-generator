@@ -19,7 +19,7 @@ const f1tvUtils = require("./f1tvutils");
 const yargs = require("yargs");
 
 yargs
-    .scriptName("f1-viewer")
+    .scriptName("f1tv-master-link-generator")
     .usage("$0 <cmd> [args]")
     .command({
         command: "get-auth-url [sessionslug] [username] [password]",
