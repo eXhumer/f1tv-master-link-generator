@@ -1,0 +1,13 @@
+{
+    "name": "f1tv-master-link-generator",
+    "version": "1.0.0",
+    "description": "Script to get authenticated media URL from session slug & F1TV credentials",
+    "main": "index.js",
+    "author": "eXhumer",
+    "license": "GPL-3.0-only",
+    "dependencies": {
+        "node-fetch": "^2.6.0",
+        "uglify-js": "^3.10.0",
+        "yargs": "^15.4.0"
+    }
+}
